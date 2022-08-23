@@ -12,7 +12,7 @@
     state: absent
   check_mode: yes
   register: presence
-  no_log: true
+#  no_log: true
 
   when:
       - HostbasedAuthentication
