@@ -1,0 +1,22 @@
+- name: "Ensure rsyslog default file permissions configured"
+  lineinfile:
+      path: /etc/rsyslog.conf
+      line: '$FileCreateMode 0640'
+      state: absent
+  check_mode: yes
+  register: presence
+  no_log: true
+
+  when:
+      - rhel8_rule_15
+  tags:
+      - rsyslog
+               
+- name: set rule
+  set_fact:
+          rule_15_Ensure: "{{ 'true' if presence.found else 'false' if not presence.found else 'unknown' }}"
+
+
+- name: "all result combined"
+  set_fact:
+     all_results: "{{ all_results|default({})|combine({'rule_15_Ensure':{'result': rule_15_Ensure|default(False), 'audits': rule_15_Ensure|default([])}}) }}"

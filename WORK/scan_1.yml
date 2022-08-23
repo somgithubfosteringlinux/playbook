@@ -1,0 +1,61 @@
+---
+- hosts: all
+  any_errors_fatal: false
+  gather_facts: true 
+  vars:
+    all_results: {}
+  vars_files:
+          - roles/scan/files/test_dict.yml
+  tasks:
+  
+  - name: Get start time       
+    block:
+    - setup:
+        filter: ansible_date_time           
+      register: start_date_result        
+    - set_fact:             
+        start_time: >-               
+          {{ start_date_result.ansible_facts.ansible_date_time.time }}               
+          {{ start_date_result.ansible_facts.ansible_date_time.date }}               
+          {{ start_date_result.ansible_facts.ansible_date_time.tz }}       
+    delegate_to: localhost
+
+    
+  - name: Execute Roles for scan
+    include_role:
+      name: scan
+      apply:
+        #check_mode: true
+        diff: true
+    tags: always
+
+  - name: Get end time       
+    block:         
+    - setup:
+        filter: ansible_date_time           
+      register: end_date_result
+    - set_fact:
+        end_time: >-
+          {{ end_date_result.ansible_facts.ansible_date_time.time }}
+          {{ end_date_result.ansible_facts.ansible_date_time.date }}               
+          {{ end_date_result.ansible_facts.ansible_date_time.tz }}       
+    delegate_to: localhost
+  - debug: 
+      var: all_results
+
+  - name: Generate report
+    block:
+    - debug:
+        var=dict
+      register: rules
+
+      #    - shell: |
+      #        [[ -f /var/lib/awx/report/v3/{{ ansible_hostname }}.html ]] && [[ -f /var/lib/awx/report/v2/{{ ansible_hostname }}.html ]] && mv /var/lib/awx/report/v2/{{ ansible_hostname }}.html /var/lib/awx/report/v1/{{ ansible_hostname }}.html
+      #        [[ -f /var/lib/awx/report/v3/{{ ansible_hostname }}.html ]] && mv /var/lib/awx/report/v3/{{ ansible_hostname }}.html /var/lib/awx/report/v2/{{ ansible_hostname }}.html
+      #        exit 0
+
+    - template: 
+        src: roles/scan/templates/report.html.j2
+        dest: /tmp/report_{{ ansible_hostname }}.html
+#        dest: /tmp/{{ ansible_hostname }}_{{ lookup('pipe', 'date +%Y%m%d%H%M%S') }}.html
+    delegate_to: localhost

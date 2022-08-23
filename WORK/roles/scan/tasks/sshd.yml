@@ -1,0 +1,274 @@
+---
+# ssh scanning playbook 
+#- name: Take Backup of SSHD File
+#  copy:
+#    src: /etc/ssh/sshd_config
+#    dest: /etc/ssh/sshd_config-Before-Patched
+- name: GT - Ensure SSH HostbasedAuthentication is disabled
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: '^(\s*)HostbasedAuthentication yes'
+    #line: 'HostbasedAuthentication no'
+    state: absent
+  check_mode: yes
+  register: presence
+  no_log: true
+
+  when:
+      - HostbasedAuthentication
+  tags:
+      - HostbasedAuthentication
+
+- name: set rule
+  set_fact:
+         sshd_HostbasedAuth: "{{ 'false' if presence.found else 'true' if not presence.found else 'unknown' }}"
+
+- name: "all result combined"
+  set_fact:
+     all_results: "{{ all_results|default({})|combine({'sshd_HostbasedAuth':{'result': sshd_HostbasedAuth|default(False), 'audits': sshd_HostbasedAuth|default([])}}) }}"
+
+############################################################################################################################################
+
+- name: "GT - Ensure SSH Idle Timeout Interval is configured - ClientAliveInterval"
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^(\s*)ClientAliveInterval 300'
+    #line: 'ClientAliveInterval 300'
+    state: absent
+  check_mode: yes
+  register: interval
+
+  when:
+      - ClientAliveInterval
+  tags:
+      - ClientAliveInterval
+
+- name: set rule
+  set_fact:
+         sshd_ClientAliveInterval: "{{ 'true' if interval.found else 'false' if not interval.found else 'unknown' }}"
+
+- name: "all result combined"
+  set_fact:
+     all_results: "{{ all_results|default({})|combine({'sshd_ClientAliveInterval':{'result': sshd_ClientAliveInterval|default(False), 'audits': sshd_ClientAliveInterval|default([])}}) }}"
+
+###########################################################################################################################################
+
+- name: "GT - Ensure SSH Idle Timeout Interval is configured - ClientAliveCountMax"
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^(\s*)ClientAliveCountMax 0'
+    #line: 'ClientAliveCountMax 0'
+    state: absent
+  check_mode: yes
+  register: CountMax
+
+  when:
+      - ClientAliveCountMax
+  tags:
+      - ClientAliveCountMax
+
+- name: set rule
+  set_fact:
+         sshd_ClientAliveCountMax: "{{ 'true' if CountMax.found else 'false' if not CountMax.found else 'unknown' }}"
+
+- name: "all result combined"
+  set_fact:
+     all_results: "{{ all_results|default({})|combine({'sshd_ClientAliveCountMax':{'result': sshd_ClientAliveCountMax|default(False), 'audits': sshd_ClientAliveCountMax|default([])}}) }}"
+
+############################################################################
+
+- name: "GT - Ensure SSH IgnoreRhosts is enabled"
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^(\s*)IgnoreRhosts yes'
+    #line: 'IgnoreRhosts yes'
+    state: absent
+  check_mode: yes
+  register: IgnoreR
+
+  when:
+      - IgnoreRhosts
+  tags:
+      - IgnoreRhosts
+
+- name: set rule
+  set_fact:
+         sshd_IgnoreRhosts: "{{ 'true' if IgnoreR.found else 'false' if not IgnoreR.found else 'unknown' }}"
+
+- name: "all result combined"
+  set_fact:
+     all_results: "{{ all_results|default({})|combine({'sshd_IgnoreRhosts':{'result': sshd_IgnoreRhosts|default(False), 'audits': sshd_IgnoreRhosts|default([])}}) }}"
+
+################################################################################
+
+- name: "GT - Ensure SSH LoginGraceTime is set to one minute or less"
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^(\s*)LoginGraceTime 60'
+    #line: 'LoginGraceTime 60'
+    state: absent
+  check_mode: yes
+  register: LoginGrace
+
+  when:
+      - LoginGraceTime
+  tags:
+      - LoginGraceTime
+
+- name: set rule
+  set_fact:
+         sshd_LoginGraceTime: "{{ 'true' if LoginGrace.found else 'false' if not LoginGrace.found else 'unknown' }}"
+
+- name: "all result combined"
+  set_fact:
+     all_results: "{{ all_results|default({})|combine({'sshd_LoginGraceTime':{'result': sshd_LoginGraceTime|default(False), 'audits': sshd_LoginGraceTime|default([])}}) }}"
+
+####################################################################################
+
+- name: "GT - Ensure SSH LogLevel is set to VERBOSE"
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^(\s*)LogLevel VERBOSE'
+    #line: 'LogLevel VERBOSE'
+    state: absent
+  check_mode: yes
+  register: LogLevel
+
+  when:
+      - LogLevelVERBOSE
+  tags:
+      - LogLevelVERBOSE
+
+- name: set rule
+  set_fact:
+         sshd_LogLevel: "{{ 'true' if LogLevel.found else 'false' if not LogLevel.found else 'unknown' }}"
+
+- name: "all result combined"
+  set_fact:
+     all_results: "{{ all_results|default({})|combine({'sshd_LogLevel':{'result': sshd_LogLevel|default(False), 'audits': sshd_LogLevel|default([])}}) }}"
+
+######################################################################################
+
+- name: "GT - Ensure SSH MaxAuthTries is set to 4 or less"
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^(\s*)MaxAuthTries 4'
+    #line: 'MaxAuthTries 4'
+    state: absent
+  check_mode: yes
+  register: AuthTries
+
+  when:
+      - MaxAuthTries
+  tags:
+      - MaxAuthTries
+
+- name: set rule
+  set_fact:
+         sshd_MaxAuthTries: "{{ 'true' if AuthTries.found else 'false' if not AuthTries.found else 'unknown' }}"
+
+- name: "all result combined"
+  set_fact:
+     all_results: "{{ all_results|default({})|combine({'sshd_MaxAuthTries':{'result': sshd_MaxAuthTries|default(False), 'audits': sshd_MaxAuthTries|default([])}}) }}"
+
+########################################################################################
+
+- name: "GT - Ensure SSH PermitEmptyPasswords is disabled"
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^(\s*)PermitEmptyPasswords no'
+    #line: 'PermitEmptyPasswords no'
+    state: absent
+  check_mode: yes
+  register: EmptyPasswords
+
+  when:
+      - PermitEmptyPasswords
+  tags:
+      - PermitEmptyPasswords
+
+- name: set rule
+  set_fact:
+         sshd_PermitEmptyPasswords: "{{ 'true' if EmptyPasswords.found else 'false' if not EmptyPasswords.found else 'unknown' }}"
+
+- name: "all result combined"
+  set_fact:
+     all_results: "{{ all_results|default({})|combine({'sshd_PermitEmptyPasswords':{'result': sshd_PermitEmptyPasswords|default(False), 'audits': sshd_PermitEmptyPasswords|default([])}}) }}"
+
+########################################################################################
+
+- name: "GT - Ensure SSH Protocol is set to 2"
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^(\s*)Protocol 2'
+    #line: 'Protocol 2'
+    state: absent
+  check_mode: yes
+  register: Protocol
+
+  when:
+      - Protocolset
+  tags:
+      - Protocolset
+
+- name: set rule
+  set_fact:
+         sshd_Protocol: "{{ 'true' if Protocol.found else 'false' if not Protocol.found else 'unknown' }}"
+
+- name: "all result combined"
+  set_fact:
+     all_results: "{{ all_results|default({})|combine({'sshd_Protocol':{'result': sshd_Protocol|default(False), 'audits': sshd_Protocol|default([])}}) }}"
+
+#############################################################################################
+
+- name: "GT - Ensure SSH root login is disabled"
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^(\s*)PermitRootLogin no'
+    #line: 'PermitRootLogin no'
+    state: absent
+  check_mode: yes
+  register: RootLogin
+
+  when:
+      - PermitRootLogin
+  tags:
+      - PermitRootLogin
+
+- name: set rule
+  set_fact:
+         sshd_PermitRootLogin: "{{ 'true' if RootLogin.found else 'false' if not RootLogin.found else 'unknown' }}"
+
+- name: "all result combined"
+  set_fact:
+     all_results: "{{ all_results|default({})|combine({'sshd_PermitRootLogin':{'result': sshd_PermitRootLogin|default(False), 'audits': sshd_PermitRootLogin|default([])}}) }}"
+
+
+##############################################################################################
+
+- name: "GT - Ensure SSH X11 forwarding is disabled"
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^(\s*)X11Forwarding no'
+    #line: 'X11Forwarding no'
+    state: absent
+  check_mode: yes
+  register: X11Forwarding
+
+  when:
+      - X11_forwarding
+  tags:
+      - X11_forwarding
+
+- name: set rule
+  set_fact:
+         sshd_X11Forwarding: "{{ 'true' if X11Forwarding.found else 'false' if not X11Forwarding.found else 'unknown' }}"
+
+- name: "all result combined"
+  set_fact:
+     all_results: "{{ all_results|default({})|combine({'sshd_X11Forwarding':{'result': sshd_X11Forwarding|default(False), 'audits': sshd_X11Forwarding|default([])}}) }}"
+
+##############################################################################################
+
+
+

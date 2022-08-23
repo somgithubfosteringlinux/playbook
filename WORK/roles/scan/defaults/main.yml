@@ -1,0 +1,32 @@
+---
+
+#rule_007: true
+#rule_008: true
+#rhel8_rule_1: false
+#rhel8_rule_2: false
+#rhel8_rule_3: false
+#rhel8_rule_4: false
+#rhel8_rule_5: false
+#rhel8_rule_6: false
+#rhel8_rule_7: false
+#rhel8_rule_8: false
+#rhel8_rule_9: false
+#rhel8_rule_10: false
+#rhel8_rule_11: false
+#rhel8_rule_12: false
+#rhel8_rule_13: false
+#rhel8_rule_14: false
+#rhel8_rule_15: true
+HostbasedAuthentication: true
+ClientAliveInterval: true
+ClientAliveCountMax: true
+IgnoreRhosts: true
+LoginGraceTime: true
+LogLevelVERBOSE: true
+MaxAuthTries: true
+PermitEmptyPasswords: true
+Protocolset: true
+PermitRootLogin: true
+X11_forwarding: true
+
+#rhel8_ipv6_required: false

@@ -1,0 +1,48 @@
+- name: Change file ownership(root) and permissions(-rw-r--r--) for hosts.allow
+  ansible.builtin.file:
+                  path: /etc/hosts.allow
+  register: ps
+
+  when:
+      - rhel8_rule_13
+  tags:
+      - hosts     
+
+- name: set rule-yes
+  set_fact:
+          rule_13_verify: true
+  when: ( ps.mode == "0644" ) and ( ps.owner == "root" ) and ( ps.group == "root" )
+       
+- name: backup insert output data into csv
+  shell: echo "{{ ps.path }},{{ ps.owner }},{{ ps.mode }}" >> /tmp/output.csv 
+
+- name: "all result combined"
+  set_fact:
+     all_results: "{{ all_results|default({})|combine({'rule_13_verify':{'result': rule_13_verify|default(False), 'audits': rule_13_verify|default([])}}) }}"
+
+
+     ########################################################################################################################
+
+- name: Change file ownership(root) and permissions(-rw-r--r--) for hosts.deny
+  ansible.builtin.file:
+                  path: /etc/hosts.deny
+  register: ps
+
+  when:
+      - rhel8_rule_14
+  tags:
+      - hosts
+
+- name: set rule-yes
+  set_fact:
+          rule_14_verify: true
+  when: ( ps.mode == "0644" ) and ( ps.owner == "root" ) and ( ps.group == "root" )
+
+- name: backup insert output data into csv
+  shell: echo "{{ ps.path }},{{ ps.owner }},{{ ps.mode }}" >> /tmp/output.csv
+
+- name: "all result combined"
+  set_fact:
+     all_results: "{{ all_results|default({})|combine({'rule_14_verify':{'result': rule_14_verify|default(False), 'audits': rule_14_verify|default([])}}) }}"
+
+

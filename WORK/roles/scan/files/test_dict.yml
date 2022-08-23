@@ -1,0 +1,29 @@
+dict: 
+ 'rule_1_Ensure': {rule: 'rule_1_Ensure', name: 'tcp_syncookies_enable(1)' , s_lv: 'Level 1'}
+ 'rule_2_Ensure': {rule: 'rule_2_Ensure', name: 'ipv6_accept_router_adv(0)' , s_lv: 'Level 1'}
+ 'rule_3_Ensure': {rule: 'rule_3_Ensure', name: 'crond.service is running' , s_lv: 'Level 1'}
+ 'rule_4_verify': {rule: 'rule_4_verify', name: 'crontab_permissions' , s_lv: 'Level 1'}
+ 'rule_5_verify': {rule: 'rule_5_verify', name: 'cron_hourly_permissions' , s_lv: 'Level 1'}
+ 'rule_6_verify': {rule: 'rule_6_verify', name: 'cron_daily_permissions' , s_lv: 'Level 1'}
+ 'rule_7_verify': {rule: 'rule_7_verify', name: 'cron_weekly_permissions' , s_lv: 'Level 1'}
+ 'rule_8_verify': {rule: 'rule_8_verify', name: 'cron_monthly_permissions' , s_lv: 'Level 1'}
+ 'rule_9_verify': {rule: 'rule_9_verify', name: 'cron_yearly_permissions' , s_lv: 'Level 1'}
+ 'rule_10_a_Existence': {rule: 'rule_10_a_Existence', name: 'cron_deny_absence' , s_lv: 'Level 1'}
+ 'rule_10_b_Existence': {rule: 'rule_10_b_Existence', name: 'cron_allow_presence' , s_lv: 'Level 1'}
+ 'rule_11_a_Existence': {rule: 'rule_11_a_Existence', name: 'at_deny_absence' , s_lv: 'Level 1'}
+ 'rule_11_b_Existence': {rule: 'rule_11_b_Existence', name: 'at_allow_presence' , s_lv: 'Level 1'}
+ 'rule_12_log': {rule: 'rule_12_log', name: 'all_files_owner_and_mode' , s_lv: 'Level 1'}
+ 'rule_13_verify': {rule: 'rule_13_verify', name: 'hosts_allow_permissions' , s_lv: 'Level 1'}
+ 'rule_14_verify': {rule: 'rule_14_verify', name: 'hosts_deny_permissions' , s_lv: 'Level 1'}
+ 'rule_15_Ensure': {rule: 'rule_15_Ensure', name: 'rsyslog_$Filecreatemode640' , s_lv: 'Level 1'}
+ 'sshd_HostbasedAuth': {rule: 'sshd_HostbasedAuth', name: 'Ensure_sshd_HostbasedAuth_is_Disabled' , s_lv: 'Level 1'}
+ 'sshd_ClientAliveInterval': {rule: 'sshd_ClientAliveInterval', name: 'Ensure_sshd_ClientAliveInterval_set_5mins' , s_lv: 'Level 1'}
+ 'sshd_ClientAliveCountMax': {rule: 'sshd_ClientAliveCountMax', name: 'sshd_ClientAliveCountMax_0' , s_lv: 'Level 1'}
+ 'sshd_IgnoreRhosts': {rule: 'sshd_IgnoreRhosts', name: 'sshd_IgnoreRhosts_yes' , s_lv: 'Level 1'}
+ 'sshd_LoginGraceTime': {rule: 'sshd_LoginGraceTime', name: 'sshd_LoginGraceTime_60' , s_lv: 'Level 1'}
+ 'sshd_LogLevel': {rule: 'sshd_LogLevel', name: 'sshd_LogLevel_verbose' , s_lv: 'Level 1'}
+ 'sshd_MaxAuthTries': {rule: 'sshd_MaxAuthTries', name: 'sshd_MaxAuthTries_4' , s_lv: 'Level 1'}
+ 'sshd_PermitEmptyPasswords': {rule: 'sshd_PermitEmptyPasswords', name: 'sshd_PermitEmptyPasswords_no' , s_lv: 'Level 1'}
+ 'sshd_Protocol': {rule: 'sshd_Protocol', name: 'sshd_Protocol_2' , s_lv: 'Level 1'}
+ 'sshd_PermitRootLogin': {rule: 'sshd_PermitRootLogin', name: 'sshd_PermitRootLogin_no' , s_lv: 'Level 1'}
+ 'sshd_X11Forwarding': {rule: 'sshd_X11Forwarding', name: 'sshd_X11Forwarding_no' , s_lv: 'Level 1'}

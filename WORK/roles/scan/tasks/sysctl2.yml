@@ -1,0 +1,21 @@
+- name: "Ensure IPv6 router advertisements are not accepted"
+  lineinfile:
+      path: /etc/sysctl.d/99-sysctl.conf
+      line: 'net.ipv6.conf.all.accept_ra=0'
+      state: absent
+  check_mode: yes
+  register: presence
+  no_log: true
+
+  when:
+      - rhel8_ipv6_required
+      - rhel8_rule_2
+
+- name: set rule
+  set_fact:
+          rule_2_Ensure: "{{ 'true' if presence.found else 'false' if not presence.found else 'unknown' }}"
+
+
+- name: "all result combined"
+  set_fact:
+     all_results: "{{ all_results|default({})|combine({'rule_2_Ensure':{'result': rule_2_Ensure|default(False), 'audits': rule_2_Ensure|default([])}}) }}"

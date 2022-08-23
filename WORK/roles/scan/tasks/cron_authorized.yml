@@ -1,0 +1,84 @@
+- name: "Ensure at is restricted to authorized users"
+  block:
+      - name: "Ensure cron is restricted to authorized users | Remove cron.deny"
+        stat:
+            path: /etc/cron.deny
+        register: cron_deny_state
+
+      - name: set rule
+        set_fact:
+            rule_10_a_Existence: "{{ 'false' if cron_deny_state.stat.exists else 'true' if not cron_deny_state.stat.exists else 'unknown' }}"
+
+      - name: take backup for rollback of cron_deny if required
+        copy:
+          src: /etc/cron.deny
+          dest: /tmp
+          remote_src: yes
+          mode: 0644
+        when: cron_deny_state.stat.exists
+
+      - name: "all result combined"
+        set_fact:     
+            all_results: "{{ all_results|default({})|combine({'rule_10_a_Existence':{'result': rule_10_a_Existence|default(False), 'audits': rule_10_a_Existence|default([])}}) }}"
+
+      - name: "Ensure cron is restricted to authorized users | Check if cron.allow exists"
+        stat:
+            path: /etc/cron.allow
+        register: cron_allow_state
+
+      - name: set rule
+        set_fact:
+          rule_10_b_Existence: "{{ 'true' if cron_allow_state.stat.exists else 'false' if not cron_allow_state.stat.exists else 'unknown' }}" 
+       
+      - name: "all result combined"
+        set_fact:
+            all_results: "{{ all_results|default({})|combine({'rule_10_b_Existence':{'result': rule_10_b_Existence|default(False), 'audits': rule_10_b_Existence|default([])}}) }}"
+
+  when:
+      - rhel8_rule_10
+  tags:
+      - cron
+
+################################################################
+
+- name: "Ensure at is restricted to authorized users"
+  block:
+      - name: "Ensure at is restricted to authorized users | Remove at.deny"
+        stat:
+           path: /etc/at.deny
+        register: at_deny_state
+
+      - name: set rule
+        set_fact:
+            rule_11_a_Existence: "{{ 'false' if at_deny_state.stat.exists else 'true' if not at_deny_state.stat.exists else 'unknown' }}"
+
+      - name: take backup for rollback of at_deny if required
+        copy:
+          src: /etc/at.deny
+          dest: /tmp
+          remote_src: yes
+          mode: 0644
+        when: at_deny_state.stat.exists 
+
+      - name: "all result combined"
+        set_fact:
+            all_results: "{{ all_results|default({})|combine({'rule_11_a_Existence':{'result': rule_11_a_Existence|default(False), 'audits': rule_11_a_Existence|default([])}}) }}"
+
+      - name: "Ensure at is restricted to authorized users  | Check if at.allow exists"
+        stat:
+           path: /etc/at.allow
+        register: at_allow_state
+
+      - name: set rule
+        set_fact:
+           rule_11_b_Existence: "{{ 'true' if at_allow_state.stat.exists else 'false' if not at_allow_state.stat.exists else 'unknown' }}"
+
+      - name: "all result combined"
+        set_fact:
+           all_results: "{{ all_results|default({})|combine({'rule_11_b_Existence':{'result': rule_11_b_Existence|default(False), 'audits': rule_11_b_Existence|default([])}}) }}"
+
+      
+  when:
+      - rhel8_rule_11
+  tags:
+      - cron

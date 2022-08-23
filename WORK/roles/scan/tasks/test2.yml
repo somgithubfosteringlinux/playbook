@@ -1,0 +1,31 @@
+---
+- block:
+  - name: "008 - Setup GREP_PASS_MAX_DAYS"
+    shell: grep "^PASS_MAX_DAYS" /etc/login.defs | awk '{ print $NF }'
+    register: GREP_PASS_MAX_DAYS
+    changed_when: no
+    check_mode: no
+
+  - name: "008 - Setup result"
+    set_fact:
+      result_008: yes
+      #    when: ('90' in GREP_PASS_MAX_DAYS.stdout) or
+      #              (chage_max.rc == 0)
+
+    when: ('99999' in GREP_PASS_MAX_DAYS.stdout)
+
+  - name: "008 - Setup audit variable"
+    set_fact:
+       task_008: "{{ task_008|default([]) + [item] }}"
+    with_items:
+          - "{{ GREP_PASS_MAX_DAYS }}"
+          #  - "{{ chage_max }}"
+
+  - name: "008 - Set Password Expiration Days (Scored)"
+    set_fact:
+      all_results: "{{ all_results|default({})|combine({'008':{'result':result_008|default(False), 'audits': task_008|default([])}}) }}"
+
+  when: rule_008
+  tags: rule_008
+  ignore_errors: yes
+

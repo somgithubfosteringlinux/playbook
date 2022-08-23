@@ -1,0 +1,16 @@
+---
+- name: "Ensure permissions on all logfiles are configured"
+  command: find /var/log -type f -exec chmod g-wx,o-rwx "{}" +
+  changed_when: false
+  failed_when: false
+  check_mode: yes
+
+  when:
+      - rhel8_rule_12
+  tags:
+      - logfiles
+
+
+- name: "all result combined"
+  set_fact:
+     all_results: "{{ all_results|default({})|combine({'rule_12_log':{'result': rule_12_log|default(True), 'audits': rule_12_log|default([])}}) }}"

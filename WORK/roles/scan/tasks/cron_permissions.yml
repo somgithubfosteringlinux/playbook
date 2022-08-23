@@ -1,0 +1,164 @@
+---
+
+- name: "Ensure cron daemon is enabled"
+  shell: service crond.service status | grep -ow "active (running)\|inactive (dead)"
+  register: status
+    
+  when:
+      - rhel8_rule_3
+  tags:
+      - cron
+
+- name: set rule
+  set_fact:
+          rule_3_Ensure: "{{ 'true' if status.stdout == 'active (running)' else 'false' }}"
+
+
+- name: "all result combined"
+  set_fact:
+     all_results: "{{ all_results|default({})|combine({'rule_3_Ensure':{'result': rule_3_Ensure|default(False), 'audits': rule_3_Ensure|default([])}}) }}"
+
+        #######################################################################################################################
+
+- name: "Ensure permissions on /etc/crontab are configured"
+  file:
+      path: /etc/crontab
+  register: ps
+
+  when:
+      - rhel8_rule_4
+  tags:
+      - crontab
+
+- name: set rule-yes
+  set_fact:
+          rule_4_verify: true
+  when: ( ps.mode == "0600" ) and ( ps.owner == "root" ) and ( ps.group == "root" )
+
+- name: backup insert output data into csv
+  shell: echo "{{ ps.path }},{{ ps.owner }},{{ ps.mode }}" > /tmp/output.csv
+
+- name: "all result combined"
+  set_fact:
+     all_results: "{{ all_results|default({})|combine({'rule_4_verify':{'result': rule_4_verify|default(False), 'audits': rule_4_verify|default([])}}) }}"
+
+        #######################################################################################################################        
+- name: "Ensure permissions on /etc/cron.hourly are configured"
+  file:
+      path: "/etc/cron.hourly"
+      state: directory
+  register: ps
+
+  when:
+      - rhel8_rule_5
+  tags:
+      - cron_hourly
+
+- name: set rule-yes
+  set_fact:
+          rule_5_verify: true
+  when: ( ps.mode == "0700" ) and ( ps.owner == "root" ) and ( ps.group == "root" )
+
+- name: backup insert output data into csv
+  shell: echo "{{ ps.path }},{{ ps.owner }},{{ ps.mode }}" >> /tmp/output.csv
+
+- name: "all result combined"
+  set_fact:
+     all_results: "{{ all_results|default({})|combine({'rule_5_verify':{'result': rule_5_verify|default(False), 'audits': rule_5_verify|default([])}}) }}"
+
+        #######################################################################################################################
+- name: "Ensure permissions on /etc/cron.daily are configured"
+  file:
+      path: /etc/cron.daily
+      state: directory
+  register: ps
+
+  when:
+      - rhel8_rule_6
+  tags:
+      - cron_daily
+
+- name: set rule-yes
+  set_fact:
+          rule_6_verify: true
+  when: ( ps.mode == "0700" ) and ( ps.owner == "root" ) and ( ps.group == "root" )
+
+- name: backup insert output data into csv
+  shell: echo "{{ ps.path }},{{ ps.owner }},{{ ps.mode }}" >> /tmp/output.csv
+
+- name: "all result combined"
+  set_fact:
+     all_results: "{{ all_results|default({})|combine({'rule_6_verify':{'result': rule_6_verify|default(False), 'audits': rule_6_verify|default([])}}) }}"
+
+        #######################################################################################################################
+- name: "Ensure permissions on /etc/cron.weekly are configured"
+  file:
+      path: /etc/cron.weekly
+      state: directory
+  register: ps
+
+  when:
+      - rhel8_rule_7
+  tags:
+      - cron_weekly
+
+- name: set rule-yes
+  set_fact:
+          rule_7_verify: true
+  when: ( ps.mode == "0700" ) and ( ps.owner == "root" ) and ( ps.group == "root" )
+
+- name: backup insert output data into csv
+  shell: echo "{{ ps.path }},{{ ps.owner }},{{ ps.mode }}" >> /tmp/output.csv
+
+- name: "all result combined"
+  set_fact:
+     all_results: "{{ all_results|default({})|combine({'rule_7_verify':{'result': rule_7_verify|default(False), 'audits': rule_7_verify|default([])}}) }}"
+
+        #######################################################################################################################
+- name: "Ensure permissions on /etc/cron.monthly are configured"
+  file:
+      path: /etc/cron.monthly
+      state: directory
+  register: ps
+
+  when:
+      - rhel8_rule_8
+  tags:
+      - cron_monthly
+
+- name: set rule-yes
+  set_fact:
+          rule_8_verify: true
+  when: ( ps.mode == "0700" ) and ( ps.owner == "root" ) and ( ps.group == "root" )
+
+- name: backup insert output data into csv
+  shell: echo "{{ ps.path }},{{ ps.owner }},{{ ps.mode }}" >> /tmp/output.csv
+
+- name: "all result combined"
+  set_fact:
+     all_results: "{{ all_results|default({})|combine({'rule_8_verify':{'result': rule_8_verify|default(False), 'audits': rule_8_verify|default([])}}) }}"
+
+        #######################################################################################################################
+- name: "Ensure permissions on /etc/cron.d are configured"
+  file:
+      path: /etc/cron.d
+      state: directory
+  register: ps
+
+  when:
+      - rhel8_rule_9
+  tags:
+      - crontab
+
+- name: set rule-yes
+  set_fact:
+          rule_9_verify: true
+  when: ( ps.mode == "0700" ) and ( ps.owner == "root" ) and ( ps.group == "root" )
+
+- name: backup insert output data into csv
+  shell: echo "{{ ps.path }},{{ ps.owner }},{{ ps.mode }}" >> /tmp/output.csv
+
+- name: "all result combined"
+  set_fact:
+     all_results: "{{ all_results|default({})|combine({'rule_9_verify':{'result': rule_9_verify|default(False), 'audits': rule_9_verify|default([])}}) }}"
+

@@ -1,0 +1,78 @@
+---
+# tasks file for ssh-hardening
+- name: Take Backup of SSHD File
+  copy:
+    src: /etc/ssh/sshd_config
+    dest: /etc/ssh/sshd_config-Before-Patched
+- name: GT - Ensure SSH HostbasedAuthentication is disabled
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: '^HostbasedAuthentication yes'
+    line: 'HostbasedAuthentication no'
+    state: present
+- name: "GT - Ensure SSH Idle Timeout Interval is configured - ClientAliveInterval"
+  lineinfile:        
+    path: /etc/ssh/sshd_config
+    regexp: "^#ClientAliveInterval|^ClientAliveInterval"
+    line: 'ClientAliveInterval 300'
+  check_mode: yes
+- name: "GT - Ensure SSH Idle Timeout Interval is configured - ClientAliveCountMax"
+  lineinfile:        
+    path: /etc/ssh/sshd_config
+    regexp: "^#ClientAliveCountMax|^ClientAliveCountMax"
+    line: 'ClientAliveCountMax 0'
+  check_mode: yes
+- name: "GT - Ensure SSH IgnoreRhosts is enabled"
+  lineinfile:        
+    path: /etc/ssh/sshd_config
+    regexp: "^#IgnoreRhosts|^IgnoreRhosts"
+    line: 'IgnoreRhosts yes'
+  check_mode: yes
+- name: "GT - Ensure SSH LoginGraceTime is set to one minute or less"
+  lineinfile:        
+    path: /etc/ssh/sshd_config
+    regexp: "^#LoginGraceTime|^LoginGraceTime"
+    line: 'LoginGraceTime 60'
+  check_mode: yes
+- name: "GT - Ensure SSH LogLevel is set to VERBOSE"
+  lineinfile:   
+    path: /etc/ssh/sshd_config  
+    regexp: "^#LogLevel|^LogLevel"
+    line: 'LogLevel VERBOSE'
+  check_mode: yes
+- name: "GT - Ensure SSH MaxAuthTries is set to 4 or less"
+  lineinfile:   
+    path: /etc/ssh/sshd_config  
+    regexp: "^#MaxAuthTries|^MaxAuthTries"
+    line: 'MaxAuthTries 4'
+  check_mode: yes
+- name: "GT - Ensure SSH PermitEmptyPasswords is disabled"
+  lineinfile:    
+    path: /etc/ssh/sshd_config  
+    regexp: "^#PermitEmptyPasswords|^PermitEmptyPasswords"
+    line: 'PermitEmptyPasswords no'
+  check_mode: yes
+- name: "GT - Ensure SSH Protocol is set to 2"
+  lineinfile:    
+    path: /etc/ssh/sshd_config  
+    regexp: "^#Protocol|^Protocol"
+    line: 'Protocol 2'
+  check_mode: yes
+- name: "GT - Ensure SSH root login is disabled"
+  lineinfile:    
+    path: /etc/ssh/sshd_config  
+    regexp: "^#PermitRootLogin|^PermitRootLogin"
+    line: 'PermitRootLogin no'
+  check_mode: yes
+- name: "GT - Ensure SSH X11 forwarding is disabled"
+  lineinfile:    
+    path: /etc/ssh/sshd_config  
+    regexp: "^#X11Forwarding|^X11Forwarding"
+    line: 'X11Forwarding no'
+  check_mode: yes
+#- name: sshd restart
+#  service:
+#    name: sshd
+#    state: restarted
+#    enabled: true
+

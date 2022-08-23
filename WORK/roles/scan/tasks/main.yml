@@ -1,0 +1,31 @@
+---
+
+#- name: "scan TCP SYN Cookies sysctl1"
+#  import_tasks: sysctl1.yml
+
+#- name: "scan TCP SYN Cookies sysctl2"
+#  import_tasks: sysctl2.yml
+
+#- name: "scan permission roles"
+#  import_tasks: cron_permissions.yml
+
+#- name: "scan authorization roles"
+#  import_tasks: cron_authorized.yml
+
+#- name: "scan filecreate mode 640 in rsyslog conf"
+#  import_tasks: rsyslog_filecreatemode.yml
+
+#- name: "scan logfile_permission roles"
+#  import_tasks: logfile_permission.yml
+
+#- name: "scan hosts_permission roles"
+#  import_tasks: hosts_permission.yml
+
+- name: "sshd vulnerabilities roles"
+  import_tasks: sshd.yml
+
+
+#- name: "Ensure TCP SYN Cookies sysctl1"
+#  import_tasks: test.yml
+#- name: "Ensure TCP SYN Cookies sysctl1"
+#  import_tasks: test2.yml
